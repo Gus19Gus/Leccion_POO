@@ -5,6 +5,8 @@
 package vista;
 
 import controlador.CarreraControl;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 /**
  *
@@ -101,15 +103,13 @@ public class VistaCarrera extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
                                 .addComponent(jButtonListar))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(txtsemestre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(txtsemestre)
+                                    .addComponent(txtdirector, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtnombre))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jButtonGuardar))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtdirector, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel1)
-                                    .addComponent(txtnombre, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE))))
+                                .addComponent(jButtonGuardar))))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
@@ -157,13 +157,35 @@ public class VistaCarrera extends javax.swing.JFrame {
         params[2]=this.txtsemestre.getText();
         params[3]=this.txtuniversidad.getText();
         this.carreraControl.crear(params);
+        this.actualizarTabla();
     }//GEN-LAST:event_jButtonGuardarActionPerformed
 
     private void jButtonListarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonListarActionPerformed
         // TODO add your handling code here:
-        System.out.println(this.carreraControl.listar().toString());
+        //System.out.println(this.carreraControl.listar().toString());
+        this.actualizarTabla();
     }//GEN-LAST:event_jButtonListarActionPerformed
 
+    private void actualizarTabla(){
+        String[]encabezado = new String [4];
+        encabezado[0]="Nombre";
+        encabezado[1]="Director";
+        encabezado[2]="Semestre";
+        encabezado[3]="Universidad";
+        
+        var datos = new Object[this.carreraControl.listar().size()][4];
+        var i=0;
+        for(var carrera:this.carreraControl.listar())
+        {
+            datos[i][0]=carrera.getNombre();
+            datos[i][1]=carrera.getDirector();
+            datos[i][2]=carrera.getSemestres();
+            datos[i][3]=carrera.getUniversidad();
+            i++;
+        }
+        this.modeloTabla= new DefaultTableModel(datos,encabezado);
+        this.jTableCarrera.setModel(modeloTabla);
+    }
     /**
      * @param args the command line arguments
      */
@@ -199,6 +221,7 @@ public class VistaCarrera extends javax.swing.JFrame {
         });
     }
     private CarreraControl carreraControl = new CarreraControl();
+    private TableModel modeloTabla;
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonGuardar;
