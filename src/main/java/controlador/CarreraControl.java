@@ -4,11 +4,25 @@
  */
 package controlador;
 
+import java.util.List;
+import modelo.Carrera;
+import servicio.CarreraServicio;
+
 /**
  *
  * @author Gus-Gus
  */
 public class CarreraControl {
     
+    private final CarreraServicio carreraServicio = new CarreraServicio();
     
+    public Carrera crear(String[] params){
+        var carrera = new Carrera(params[0],params[1], Integer.valueOf(params[2]), params[3]);
+        this.carreraServicio.crear(carrera);
+        return carrera;
+        
+    }
+    public List<Carrera> listar(){
+        return this.carreraServicio.listar();
+    }
 }
